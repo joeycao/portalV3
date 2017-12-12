@@ -1,4 +1,4 @@
-local iresty_test    = require "resty.iresty_test"
+local iresty_test    = require "test.iresty_test"
 local tb = iresty_test.new({unit_name="test_rule"})
 
 local switches   = require "portal.abtesting.switch.switches"
@@ -74,8 +74,9 @@ end
 function tb:test_0003()
 
   local v_template_data = {id="t100000",
-    name="AD",
-    path="ad.html"
+      name="AD",
+      path="",
+      content="{* data.content *}"
   }
 
   local v_page_data  = { id = 'p100000',

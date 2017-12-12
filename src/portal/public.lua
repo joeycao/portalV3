@@ -9,9 +9,7 @@ local v_page = require "portal.core.v_page"
 local stickies = require "portal.abtesting.sticky.stickies"
 local switches = require "portal.abtesting.switch.switches"
 local pattern_matcher = require "portal.abtesting.pattern_matcher"
-
 local log = require "portal.common.log"
-local errorView = "error.html"
 
 function _M.view(pid)
   _M.view_v_page(pid)
@@ -24,7 +22,11 @@ function _M.view_content(content_id)
     log.debug("vcontent.content_id:"..content_id.. " --template_id--".. (vcontent.template_id or "NULL template_id"))
     local vtemplate = v_template.get_by(vcontent.template_id)
     --template.caching(true)
-    local func = template.compile(vtemplate.path)
+    local view = vtemplate.path
+    if string.len(view) == 0 then
+      view = vtemplate.content
+    end
+    local func = template.compile(view)
     --执行函数，得到渲染之后的内容
     local context = {data=vcontent}
     local content = func(context)
@@ -39,7 +41,7 @@ function _M.view_v_page(pid)
   -- 根据页面编码，获得页面元数据。
   local page = v_page.get_by(pid)
   if(page == nil ) then
-    template.render(errorView,{ error = "err" })
+    ngx.exit(ngx.HTTP_BAD_REQUEST)
     return
   end
 
