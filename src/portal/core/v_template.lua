@@ -8,7 +8,12 @@ local storages = require "portal.store.storages"
 local store=storages.match()
 
 function _M.new(self,data)
-  return setmetatable(data, mt)
+  return setmetatable({
+    name=data.name,
+    content=(data.content or ""),
+    path=(data.path or ""),
+    id=data.id,
+  }, mt)
 end
 
 function _M.get_by(id)

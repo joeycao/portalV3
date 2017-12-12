@@ -9,7 +9,10 @@ local v_pattern_match = require "portal.core.v_pattern_match"
 -- @param v_page
 -- @return[swtich_name,switch_opts,sticky_name].
 function _M.match(v_page)
-  patterns = v_pattern_match.get_by()
+  local patterns = v_pattern_match.get_by()
+  if(patterns == nill) then
+    return nil,nil,nil
+  end
   local request_uri = ngx.var.request_uri
   for i,v in pairs(patterns) do
     pattern = v.pattern
@@ -22,7 +25,7 @@ function _M.match(v_page)
       return swtich_name,v.swtich_opts,v.sticky_name
     end
   end
-  return nil,nil
+  return nil,nil,nil
 end
 
 return _M

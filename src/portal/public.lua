@@ -45,7 +45,7 @@ function _M.view_v_page(pid)
 
   -- 获得页面选择算法与会话保持状态 。
   local switch_name,swtich_opts, sticky_name = pattern_matcher.match(page)
-  log.debug("public:pattern_matcher: (switch_name,sticky_name)=(" ..switch_name .."," ..sticky_name..")")
+  log.debug("public:pattern_matcher: (switch_name,sticky_name)=(" ..(switch_name or "nil") .."," ..(sticky_name or "nil")..")")
   local sticky = stickies.match(sticky_name)
   local v_sticky =sticky.get(pid)
   local v = nil
@@ -55,7 +55,7 @@ function _M.view_v_page(pid)
   end
 
   if( v == nil) then
-    log.debug("Try to  match version by switch_name=(" ..switch_name ..")")
+    log.debug("Try to  match version by switch_name=(" ..(switch_name or "nil") ..")")
     local switch = switches.match(switch_name)
     v = switch.match(swtich_opts)
   end

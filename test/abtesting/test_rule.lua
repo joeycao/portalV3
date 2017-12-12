@@ -47,7 +47,8 @@ function tb:test_0002()
     local data1 = {
       id="t100000",
       name="AD",
-      path="ad.html"
+      path="",
+      content="{* data.content *}"
     }
     jsonfile_store.save_update(data1.id,data1)
 

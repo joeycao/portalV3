@@ -7,14 +7,13 @@ local log = require "portal.common.log"
 local NS = require "portal.store.namespace"
 local storages = require "portal.store.storages"
 local store=storages.match()
-
 function _M.new(self,data)
   return setmetatable(data, mt)
 end
 
 function _M.get_by()
-  data = store.get(NS.pattern())
-  if  data == nil then
+  local data = store.get(NS.pattern())
+  if data == nil then
     return nil
   end
   return _M:new(data)
