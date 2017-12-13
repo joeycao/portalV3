@@ -5,6 +5,7 @@ local NS = require "portal.store.namespace"
 local validator = require "portal.common.validator"
 local log = require "portal.common.log"
 local json_util = require "portal.common.json_util"
+local string_util = require "portal.common.string_util"
 local helper = require "portal.management.respose_helper"
 local v_template = require "portal.core.v_template"
 
@@ -21,9 +22,18 @@ function _M.vaild_get(json_text,errors)
     return errors,has_err,nil
   end
   data = json_util.decode(json_text)
+
+  data.id=string_util.trim(data.id)
   errors,has_err = validator.vaild_id(data.id,"[id] invalid",errors)
+
+  data.name=string_util.trim(data.name)
   errors,has_err = validator.vaild_en_name(data.name,"[name] invalid",errors)
-  errors,has_err = validator.vaild_filename(data.path,"[path] invalid",errors)
+
+  data.path=string_util.trim(data.path)
+  if(not string_util.is_blank(data.path))then
+    errors,has_err = validator.vaild_filename(data.path,"[path] invalid",errors)
+  end
+
   return errors,has_err,data
 end
 

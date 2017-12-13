@@ -16,8 +16,9 @@ function _M.vaild_get(json_text,errors)
     return errors,has_err,nil
   end
   data = json_util.decode(json_text)
+  data.id=string_util.trim(data.id)
   errors,has_err = validator.vaild_id(data.id,"[id] invalid",errors)
-  --errors,has_err = validator.vaile(data.multi_content,"[multi_content] invalid json",errors)
+
   return errors,has_err,data
 end
 
@@ -29,7 +30,6 @@ end
 --{"id":"p100000","multi_content":{"v1":"/public/vcontent/c10000","v2":"/public/vcontent/c20000"}}
 --
 function _M.save(body)
-  --ngx.say("..body data.." ..body)
   local errors,has_err,data = _M.vaild_get(body)
 
   if has_err then

@@ -32,11 +32,11 @@ function  _M.vaild_json_text(text,error_message,errors)
 end
 
 function  _M.vaild_id(text,error_message,errors)
-  return  _M.valid_by_regex("[a-zA-Z0-9]{1,20}",text,error_message,errors)
+  return  _M.valid_by_regex("[a-zA-Z0-9]{1,50}",text,error_message,errors)
 end
 
 function  _M.vaild_en_name(text,error_message,errors)
-  return  _M.valid_by_regex("[a-zA-Z0-9\\._-]{1,50}",text,error_message,errors)
+  return  _M.valid_by_regex("[a-zA-Z0-9\\._-]{1,100}",text,error_message,errors)
 end
 
 function  _M.vaild_number(text,error_message,errors)

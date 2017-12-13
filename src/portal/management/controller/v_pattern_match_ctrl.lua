@@ -25,6 +25,19 @@ function _M.vaild_get(json_text,errors)
     return errors,has_err,nil
   end
   local data = json_util.decode(json_text)
+  for i,v in ipairs(data) do
+    data.id=string_util.trim(data.id)
+    errors,_ = validator.vaild_id(data.id,"[id] invalid",errors)
+
+    data.swtich_name=string_util.trim(data.swtich_name)
+    errors,_ = validator.vaild_en_name(data.swtich_name,"[swtich_name] invalid",errors)
+
+    data.sticky_name=string_util.trim(data.sticky_name)
+    errors,_ = validator.vaild_en_name(data.sticky_name,"[sticky_name] invalid",errors)
+  end
+  if (#errors >0) then
+    has_err =true
+  end
   return errors,has_err,data
 end
 
