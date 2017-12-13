@@ -8,14 +8,14 @@ local file_util = require "portal.common.file_util"
 local json_util = require "portal.common.json_util"
 local now          = ngx.now
 local var          = ngx.var
-local file_store_root  = var.file_store_root  or "/home/store/"
+local root_public  = (var.root_public or "/home/portal/web/cms2/frontend/staticize/static/upload/public/")
 
 
 function _M.query(pattern)
   log.debug("file_store:query["..pattern.."]")
   local table = "{"
-  for file in lfs.dir(file_store_root) do
-    p = file_store_root ..  file
+  for file in lfs.dir(root_public) do
+    p = root_public ..  file
     if file ~= "." and file ~= '..' then
       local mode = lfs.attributes(p, "mode")
       if mode == "file" then
@@ -31,7 +31,7 @@ end
 
 function _M.get(id)
   log.debug("file_store:get["..id.."]")
-  local data_file = file_store_root..id
+  local data_file = root_public..id
   local is_exists = file_util.exists(data_file)
   log.debug("file_store:get_data_file["..data_file.."]")
   if is_exists then
@@ -44,19 +44,23 @@ end
 
 function _M.save_update(id,data)
   log.debug("file_store:save_update["..#data.."]")
-  local data_file = file_store_root..id
+  local data_file = root_public..id
   if (file_util.exists(data_file)) then
     file_util.remove(data_file)
   end
   json_data = json_util.encode(data) or "{}"
   log.debug("file_store:save_update:write["..(json_data or "").."]")
-  file_util.write(data_file,json_data)
-  return true ,nil
+  local succ,err = file_util.write(data_file,json_data)
+  if err then
+    log.warn("file_store:save_update:write:err[".. err .."]")
+    return false, err
+  end
+  return succ ,nil
 end
 
 function _M.delete(id)
   log.debug("file_store:delete["..id.."]")
-  local data_file = file_store_root..id
+  local data_file = root_public..id
   if (file_util.exists(data_file)) then
     file_util.remove(data_file)
     return true,nil
