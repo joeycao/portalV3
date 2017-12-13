@@ -10,6 +10,8 @@ local stickies = require "portal.abtesting.sticky.stickies"
 local switches = require "portal.abtesting.switch.switches"
 local pattern_matcher = require "portal.abtesting.pattern_matcher"
 local log = require "portal.common.log"
+local string_util = require "portal.common.string_util"
+local FRIST_V1 = "v1"
 
 function _M.view(pid)
   _M.view_v_page(pid)
@@ -35,17 +37,15 @@ function _M.view_content(content_id)
 end
 
 function _M.view_v_page(pid)
-
   local content_uri =nil
-
-  -- 根据页面编码，获得页面元数据。
+  -- Get page   by request pid .
   local page = v_page.get_by(pid)
   if(page == nil ) then
     ngx.exit(ngx.HTTP_NOT_FOUND)
     return
   end
 
-  -- 获得页面选择算法与会话保持状态 。
+  -- Get switch &sticky method by request uri .
   local switch_name,swtich_opts, sticky_name = pattern_matcher.match(page)
   log.debug("view_v_page: [switch_name,sticky_name]=[" ..(switch_name or "nil") .."," ..(sticky_name or "nil").."]")
   local sticky = stickies.match(sticky_name)
@@ -62,12 +62,17 @@ function _M.view_v_page(pid)
     v = switch.match(swtich_opts)
   end
 
-  local content_uri = page.multi_content[v] or nil
+  -- fix version id .
+  if (v == nil or (not string_util.startswith(v,"v"))) then
+    v = FRIST_V1
+  end
+
+  local content_uri = page.multi_content[v] or  page.multi_content[FRIST_V1]
   if(content_uri ~= nil) then
-    --根据内容URL，获得并显示。
+    -- Fetch content and disply it by uri.
     local res = ngx.location.capture(content_uri)
     if not v_sticky and res.status == 200 then
-      log.debug("Aview_v_page: dd sticky: (pid)" ..pid)
+      log.debug("view_v_page: add sticky: (pid)" ..pid)
       sticky.add(pid,v)
     end
     ngx.say(res.body)
