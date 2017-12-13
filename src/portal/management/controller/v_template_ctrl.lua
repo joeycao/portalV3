@@ -17,23 +17,26 @@ local v_template = require "portal.core.v_template"
 function _M.vaild_get(json_text,errors)
   local has_err = false
   errors = errors or {}
-  local errors,has_err = validator.vaild_json_text(json_text,"invalid json data",errors)
+  local errors,has_err = validator.vaild_json_text(json_text,"is invalid. json data",errors)
   if has_err  then
     return errors,has_err,nil
   end
   data = json_util.decode(json_text)
 
   data.id=string_util.trim(data.id)
-  errors,has_err = validator.vaild_id(data.id,"[id] invalid",errors)
+  errors,_ = validator.vaild_id(data.id,"[id] is invalid.",errors)
 
   data.name=string_util.trim(data.name)
-  errors,has_err = validator.vaild_en_name(data.name,"[name] invalid",errors)
+  errors,_ = validator.vaild_en_name(data.name,"[name] is invalid.",errors)
 
   data.path=string_util.trim(data.path)
   if(not string_util.is_blank(data.path))then
-    errors,has_err = validator.vaild_filename(data.path,"[path] invalid",errors)
+    errors,_ = validator.vaild_filename(data.path,"[path] is invalid.",errors)
   end
 
+  if(#errors > 0 ) then
+    has_err = true
+  end
   return errors,has_err,data
 end
 
@@ -64,7 +67,7 @@ end
 ---------------------------------------
 function _M.delete(id)
   id = id or "-1"
-  local errors,has_err = validator.vaild_id(id,"[id] invalid",errors)
+  local errors,has_err = validator.vaild_id(id,"[id] is invalid.",errors)
   if has_err then
     return helper.error_or_success(errors)
   end

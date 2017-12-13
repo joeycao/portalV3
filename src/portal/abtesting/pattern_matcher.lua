@@ -19,7 +19,7 @@ function _M.match(v_page)
     if ngx.re.find(request_uri,pattern, "o") then
       swtich_name = v.swtich_name
       if(swtich_name == nil) then
-        log.warn("not found switch for v_page:["..v_page.id.."]")
+        log.warn("Not found switch for v_page:["..v_page.id.."].")
         return nil,nil
       end
       return swtich_name,v.swtich_opts,v.sticky_name

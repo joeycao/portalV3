@@ -5,20 +5,20 @@ local validator = require "portal.common.validator"
 local log = require "portal.common.log"
 local NS = require "portal.store.namespace"
 local json_util = require "portal.common.json_util"
+local string_util = require "portal.common.string_util"
 local helper = require "portal.management.respose_helper"
 local v_page = require "portal.core.v_page"
 
 function _M.vaild_get(json_text,errors)
   local has_err = false
   errors = errors or {}
-  local errors,has_err = validator.vaild_json_text(json_text,"invalid json data",errors)
+  local errors,has_err = validator.vaild_json_text(json_text,"is invalid. json data",errors)
   if has_err  then
     return errors,has_err,nil
   end
   data = json_util.decode(json_text)
   data.id=string_util.trim(data.id)
-  errors,has_err = validator.vaild_id(data.id,"[id] invalid",errors)
-
+  errors,has_err = validator.vaild_id(data.id,"[id] is invalid.",errors)
   return errors,has_err,data
 end
 

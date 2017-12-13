@@ -14,6 +14,7 @@ function _M.valid_by_regex(pattern,text,error_message,errors)
   if ngx.re.match(text, pattern) == nil then
     has_err = true
     table.insert(errors,error_message)
+    log.debug("valid_by_regex:["..text.."]["..pattern.."]errors:["..table.concat(errors,",").."]")
   end
   return errors,has_err
 end

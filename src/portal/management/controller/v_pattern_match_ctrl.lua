@@ -6,6 +6,7 @@ local storages = require "portal.store.storages"
 local validator = require "portal.common.validator"
 local log = require "portal.common.log"
 local json_util = require "portal.common.json_util"
+local string_util = require "portal.common.string_util"
 local helper = require "portal.management.respose_helper"
 local v_pattern_match = require "portal.core.v_pattern_match"
 
@@ -20,22 +21,22 @@ local v_pattern_match = require "portal.core.v_pattern_match"
 function _M.vaild_get(json_text,errors)
   local has_err = false
   errors = errors or {}
-  errors,has_err = validator.vaild_json_text(json_text,"invalid json data",errors)
+  errors,has_err = validator.vaild_json_text(json_text,"is invalid. json data",errors)
   if has_err  then
     return errors,has_err,nil
   end
   local data = json_util.decode(json_text)
   for i,v in ipairs(data) do
-    data.id=string_util.trim(data.id)
-    errors,_ = validator.vaild_id(data.id,"[id] invalid",errors)
+    v.id=string_util.trim(v.id)
+    errors,_ = validator.vaild_id(v.id,"[id] is invalid.",errors)
 
-    data.swtich_name=string_util.trim(data.swtich_name)
-    errors,_ = validator.vaild_en_name(data.swtich_name,"[swtich_name] invalid",errors)
+    v.swtich_name=string_util.trim(v.swtich_name)
+    errors,_ = validator.vaild_en_name(v.swtich_name,"[swtich_name] is invalid.",errors)
 
-    data.sticky_name=string_util.trim(data.sticky_name)
-    errors,_ = validator.vaild_en_name(data.sticky_name,"[sticky_name] invalid",errors)
+    v.sticky_name=string_util.trim(v.sticky_name)
+    errors,_ = validator.vaild_en_name(v.sticky_name,"[sticky_name] is invalid.",errors)
   end
-  if (#errors >0) then
+  if (#errors > 0) then
     has_err =true
   end
   return errors,has_err,data
@@ -48,7 +49,7 @@ function _M.save(body)
   --ngx.say("..body data.." ..body)
   local errors,has_err,data = _M.vaild_get(body)
   if has_err then
-    return helper.to_error(errors)
+    return helper.error_or_success(errors)
   end
   ok,err = v_pattern_match.save(data)
   return helper.error_or_success(err,data)

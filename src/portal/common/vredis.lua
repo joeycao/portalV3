@@ -165,7 +165,7 @@ function _M:open(key, lifetime)
   else
     return nil, err
   end
-  return nil, "invalid"
+  return nil, "is invalid."
 end
 
 function _M:fetch(key,close)

@@ -19,7 +19,7 @@ function _M.view_content(content_id)
   log.debug("view_content:["..content_id.."]")
   local vcontent = v_content.get_by(content_id)
   if (vcontent ~= nil ) then
-    log.debug("vcontent.content_id:"..content_id.. " --template_id--".. (vcontent.template_id or "NULL template_id"))
+    log.debug("view_content.content_id["..content_id.. " ] template_id[".. (vcontent.template_id or "NULL template_id".."]"))
     local vtemplate = v_template.get_by(vcontent.template_id)
     --template.caching(true)
     local view = vtemplate.path
@@ -41,15 +41,15 @@ function _M.view_v_page(pid)
   -- 根据页面编码，获得页面元数据。
   local page = v_page.get_by(pid)
   if(page == nil ) then
-    ngx.exit(ngx.HTTP_BAD_REQUEST)
+    ngx.exit(ngx.HTTP_NOT_FOUND)
     return
   end
 
   -- 获得页面选择算法与会话保持状态 。
   local switch_name,swtich_opts, sticky_name = pattern_matcher.match(page)
-  log.debug("public:pattern_matcher: (switch_name,sticky_name)=(" ..(switch_name or "nil") .."," ..(sticky_name or "nil")..")")
+  log.debug("view_v_page: [switch_name,sticky_name]=[" ..(switch_name or "nil") .."," ..(sticky_name or "nil").."]")
   local sticky = stickies.match(sticky_name)
-  local v_sticky =sticky.get(pid)
+  local v_sticky = sticky.get(pid)
   local v = nil
   if v_sticky ~= nil then
     v = v_sticky
@@ -57,7 +57,7 @@ function _M.view_v_page(pid)
   end
 
   if( v == nil) then
-    log.debug("Try to  match version by switch_name=(" ..(switch_name or "nil") ..")")
+    log.debug("Try to match version by switch_name=[" ..(switch_name or "nil") .."]")
     local switch = switches.match(switch_name)
     v = switch.match(swtich_opts)
   end
@@ -67,7 +67,7 @@ function _M.view_v_page(pid)
     --根据内容URL，获得并显示。
     local res = ngx.location.capture(content_uri)
     if not v_sticky and res.status == 200 then
-      log.debug("add sticky: (pid)" ..pid)
+      log.debug("Aview_v_page: dd sticky: (pid)" ..pid)
       sticky.add(pid,v)
     end
     ngx.say(res.body)

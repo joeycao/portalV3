@@ -16,18 +16,23 @@ local v_content = require "portal.core.v_content"
 function _M.vaild_get(json_text,errors)
   local has_err = false
   errors = errors or {}
-  local errors,has_err = validator.vaild_json_text(json_text,"invalid json data",errors)
+  local errors,has_err = validator.vaild_json_text(json_text,"is invalid. json data",errors)
   if has_err  then
     return errors,has_err,nil
   end
-  local data = json_util.decode(json_text)
 
+  local data = json_util.decode(json_text)
   data.id=string_util.trim(data.id)
-  errors,has_err = validator.vaild_id(data.id,"[id] invalid",errors)
+  errors,_  = validator.vaild_id(data.id,"[id] is invalid.",errors)
 
   data.template_id=string_util.trim(data.template_id)
-  errors,has_err = validator.vaild_id(data.template_id,"[template_id] invalid",errors)
+  errors,_ = validator.vaild_id(data.template_id,"[template_id] is invalid.",errors)
+
+  if(#errors > 0 ) then
+    has_err = true
+  end
   return errors,has_err,data
+
 end
 
 -------------------------------------
@@ -56,7 +61,7 @@ end
 ---------------------------------------
 function _M.delete(id)
   id = id or "-1"
-  local errors,has_err = validator.vaild_id(id,"[id] invalid",errors)
+  local errors,has_err = validator.vaild_id(id,"[id] is invalid.",errors)
   if has_err then
     return helper.error_or_success(errors)
   end

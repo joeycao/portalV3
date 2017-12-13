@@ -18,7 +18,7 @@ function tb:test_0000()
   if(switch ~= nil and switch.name =="firstly_v1") then
     self:log("load " .. switch.name .." is ok")
   else
-    error("firstly_v1 is invalid.")
+    error("firstly_v1 is is invalid..")
   end
   if(switch.match({}) ~="v1") then
     error("firstly_v1:select not is v1")
@@ -31,7 +31,7 @@ function tb:test_0001()
   if(switch ~= nil and switch.name =="byweight") then
     self:log("load " .. switch.name .." is ok")
   else
-    error("byweight is invalid.")
+    error("byweight is is invalid..")
   end
   if(switch.match({v1=0,v2=1}) ~="v2") then
     error("byweight:select not is byweight")
@@ -59,12 +59,12 @@ function tb:test_0002()
     end
 
     if data2.id ~= data1.id then
-      error("get data is invalid.data2.id="..data2.id.."data1.id="..data1.id)
+      error("get data is is invalid..data2.id="..data2.id.."data1.id="..data1.id)
       return
     end
     jsonfile_store.delete(data2.id)
   else
-    error("jsonfile_store is invalid.")
+    error("jsonfile_store is is invalid..")
   end
 end
 
