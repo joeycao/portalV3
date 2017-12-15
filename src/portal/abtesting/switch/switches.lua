@@ -12,7 +12,8 @@ local function load(name)
 end
 
 function _M.match(name)
-  prog = (load(name or "firstly_v1") or load("firstly_v1"))
+  name = name or "firstly_v1"
+  prog = (load(name) or load("firstly_v1"))
   log.debug("switchs:match:name["..prog.name.."]")
   return prog
 end

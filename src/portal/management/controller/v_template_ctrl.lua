@@ -22,7 +22,6 @@ function _M.vaild_get(json_text,errors)
     return errors,has_err,nil
   end
   data = json_util.decode(json_text)
-
   data.id=string_util.trim(data.id)
   errors,_ = validator.vaild_id(data.id,"[id] is invalid.",errors)
 

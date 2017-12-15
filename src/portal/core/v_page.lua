@@ -17,7 +17,7 @@ end
 
 function _M.get_by(id)
   data = store.get(NS.vp_prefix(id))
-  if  data == nil then
+  if nil == data  then
     return nil
   end
   return _M:new(data)

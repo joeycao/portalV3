@@ -13,8 +13,9 @@ local v_pattern_match = require "portal.core.v_pattern_match"
 --- Example:
 --{
 --id = 'p1',
---pattern = '/(.*)',
+--pattern = '/.*',
 --swtich_name='byweight',
+--swtich_opts={v1=1,v2=2}
 --sticky_name='session_cookie'
 --}
 
@@ -29,13 +30,18 @@ function _M.vaild_get(json_text,errors)
   for i,v in ipairs(data) do
     v.id=string_util.trim(v.id)
     errors,_ = validator.vaild_id(v.id,"[id] is invalid.",errors)
-
+     
     v.swtich_name=string_util.trim(v.swtich_name)
-    errors,_ = validator.vaild_en_name(v.swtich_name,"[swtich_name] is invalid.",errors)
-
+    if(not string_util.is_blank(v.swtich_name))then      
+      errors,_ = validator.vaild_en_name(v.swtich_name,"[swtich_name] is invalid.",errors)
+    end   
+     
     v.sticky_name=string_util.trim(v.sticky_name)
-    errors,_ = validator.vaild_en_name(v.sticky_name,"[sticky_name] is invalid.",errors)
+    if(not string_util.is_blank(v.sticky_name))then
+      errors,_ = validator.vaild_en_name(v.sticky_name,"[sticky_name] is invalid.",errors)
+    end    
   end
+  
   if (#errors > 0) then
     has_err =true
   end

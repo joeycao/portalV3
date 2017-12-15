@@ -12,7 +12,8 @@ function load(name)
 end
 
 function _M.match(name)
-  return (load(name or "empty") or load("empty"))
+  name = name or "empty"
+  return (load(name) or load("empty"))
 end
 
 return _M

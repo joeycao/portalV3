@@ -40,12 +40,12 @@ function _M.view_v_page(pid)
   local content_uri =nil
   -- Get page   by request pid .
   local page = v_page.get_by(pid)
-  if(page == nil ) then
+  if(nil == page) then
     ngx.exit(ngx.HTTP_NOT_FOUND)
     return
   end
 
-  -- Get switch &sticky method by request uri .
+  -- get switch &sticky method by request uri .
   local switch_name,swtich_opts, sticky_name = pattern_matcher.match(page)
   log.debug("view_v_page: [switch_name,sticky_name]=[" ..(switch_name or "nil") .."," ..(sticky_name or "nil").."]")
   local sticky = stickies.match(sticky_name)
@@ -69,7 +69,7 @@ function _M.view_v_page(pid)
 
   local content_uri = page.multi_content[v] or  page.multi_content[FRIST_V1]
   if(content_uri ~= nil) then
-    -- Fetch content and disply it by uri.
+    -- fetch content and disply it by uri.
     local res = ngx.location.capture(content_uri)
     if not v_sticky and res.status == 200 then
       log.debug("view_v_page: add sticky: (pid)" ..pid)

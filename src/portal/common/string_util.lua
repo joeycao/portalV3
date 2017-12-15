@@ -26,7 +26,8 @@ function _M.startswith(text, prefix )
 end
 
 function _M.trim(text)
-  return (string.gsub(text, "^%s*(.-)%s*$", "%1"))
+  text = text or ""
+  return string.gsub(text, "^%s*(.-)%s*$", "%1")
 end
 
 function _M.is_blank(text)
